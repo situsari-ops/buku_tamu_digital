@@ -1,0 +1,117 @@
+var SHEET_REKAP = "Rekap Semua";
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var ss = SpreadsheetApp.openById("1Xo6es45wj_3QQUzlLtZ3PMMYXM06byl1SxncmS5FMqk");
+    var namaSheetHarian = buatNamaSheetHarian();
+
+    // Sheet harian
+    var sheetHarian = ss.getSheetByName(namaSheetHarian);
+    if (!sheetHarian) {
+      sheetHarian = ss.insertSheet(namaSheetHarian);
+      buatHeader(sheetHarian);
+      ss.setActiveSheet(sheetHarian);
+      ss.moveActiveSheet(1);
+    }
+    var nomorHarian = sheetHarian.getLastRow();
+    tambahBarisData(sheetHarian, data, nomorHarian);
+    formatSheet(sheetHarian);
+
+    // Sheet rekap
+    var sheetRekap = ss.getSheetByName(SHEET_REKAP);
+    if (!sheetRekap) {
+      sheetRekap = ss.insertSheet(SHEET_REKAP);
+      buatHeader(sheetRekap);
+    }
+    var nomorRekap = sheetRekap.getLastRow();
+    tambahBarisData(sheetRekap, data, nomorRekap);
+    formatSheet(sheetRekap);
+
+    // Hapus sheet Temp kalau masih ada
+    var sheetTemp = ss.getSheetByName("Temp");
+    if (sheetTemp && ss.getSheets().length > 1) {
+      ss.deleteSheet(sheetTemp);
+    }
+
+    return buatResponse({ status: "success" });
+  } catch (err) {
+    return buatResponse({ status: "error", message: err.message });
+  }
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput("Buku Tamu Digital aktif ✓")
+    .setMimeType(ContentService.MimeType.TEXT);
+}
+
+function buatNamaSheetHarian() {
+  var tz = Session.getScriptTimeZone() || "Asia/Jakarta";
+  return Utilities.formatDate(new Date(), tz, "dd-MM-yyyy");
+}
+
+function tambahBarisData(sheet, data, nomor) {
+  sheet.appendRow([
+    nomor,
+    data.tanggal    || "",
+    data.waktu      || "",
+    data.nama       || "",
+    data.nik        || "",
+    data.hp         || "",
+    data.alamat     || "",
+    data.rt         || "",
+    data.rw         || "",
+    data.keperluan  || "",
+    data.tujuan     || "",
+    data.keterangan || "",
+  ]);
+}
+
+function buatHeader(sheet) {
+  var headers = [
+    "No",
+    "Tanggal",
+    "Waktu Datang",
+    "Nama Lengkap",
+    "NIK",
+    "No HP / WA",
+    "Alamat",
+    "RT",
+    "RW",
+    "Keperluan",
+    "Tujuan / Petugas",
+    "Keterangan",
+  ];
+  sheet.appendRow(headers);
+  var headerRange = sheet.getRange(1, 1, 1, headers.length);
+  headerRange.setBackground("#1a5c38");
+  headerRange.setFontColor("#ffffff");
+  headerRange.setFontWeight("bold");
+  headerRange.setFontSize(11);
+  sheet.setFrozenRows(1);
+}
+
+function formatSheet(sheet) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return;
+  sheet.autoResizeColumns(1, 12);
+  var dataRange = sheet.getRange(2, 1, lastRow - 1, 12);
+  var bandings = sheet.getBandings();
+  for (var i = 0; i < bandings.length; i++) bandings[i].remove();
+  dataRange.applyRowBanding(SpreadsheetApp.BandingTheme.LIGHT_GREY, false, false);
+  dataRange.setBorder(true, true, true, true, true, true,
+    "#c8ddd1", SpreadsheetApp.BorderStyle.SOLID);
+}
+
+function buatResponse(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+
+
+
+https://docs.google.com/spreadsheets/d/1Xo6es45wj_3QQUzlLtZ3PMMYXM06byl1SxncmS5FMqk/edit?usp=sharing

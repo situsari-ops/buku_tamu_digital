@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buku Tamu Digital – Kantor Desa Situsari</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: #1a1a1a;
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: url('1.png');
+      background-size: cover;
+      background-position: center top;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+
+    .page { display: flex; flex-direction: column; min-height: 100vh; width: 100%; }
+
+    /* ===== HEADER ===== */
+    .site-header { background: linear-gradient(135deg, #1a5c38 0%, #1a5c38 100%); padding: 1rem 1.5rem; width: 100%; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; width: 100%; max-width: 900px; margin: 0 auto; gap: 1rem; }
+    .logo-wrap { flex-shrink: 0; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; }
+    .logo-wrap img { width: 70px; height: 70px; object-fit: contain; display: block; }
+    .header-text { flex: 1; text-align: center; }
+    .header-text h1 { font-size: 20px; font-weight: 600; color: #fff; }
+    .header-text p { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 2px; }
+
+    /* ===== MAIN ===== */
+    .main-content { flex: 1; padding: 1.5rem 1rem; max-width: 620px; width: 100%; margin: 0 auto; position: relative; z-index: 1; }
+
+    /* ===== CARD ===== */
+    .card {
+      background: #ffffff !important;
+      border-radius: 16px;
+      padding: 2rem;
+      border: 1px solid #e4e9e6;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      width: 100%;
+      position: relative;
+      z-index: 2;
+    }
+    .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 1px solid #eef2ef; background: #ffffff; }
+    .card-header .ti { font-size: 24px; color: #1a5c38; flex-shrink: 0; }
+    .card-header h2 { font-size: 18px; font-weight: 600; }
+    .card-header p { font-size: 13px; color: #6b7b73; margin-top: 2px; }
+
+    /* ===== FIELDS ===== */
+    .field { margin-bottom: 1.25rem; background: #ffffff; }
+    .field label { display: block; font-size: 13px; font-weight: 500; color: #374840; margin-bottom: 6px; }
+    .req { color: #c0392b; }
+    .field input, .field select, .field textarea {
+      width: 100%; font-family: inherit; font-size: 16px; color: #1a1a1a;
+      background: #f9fbfa !important; border: 1px solid #d0dbd4; border-radius: 8px;
+      padding: 10px 12px; transition: border-color 0.15s, box-shadow 0.15s;
+      appearance: none; -webkit-appearance: none;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: #a8b8b0; }
+    .field input:focus, .field select:focus, .field textarea:focus {
+      outline: none; border-color: #1a5c38; background: #fff !important;
+      box-shadow: 0 0 0 3px rgba(26,92,56,0.12);
+    }
+    .field input.is-invalid, .field select.is-invalid { border-color: #c0392b; }
+    .field textarea { resize: vertical; min-height: 84px; }
+    .field select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24'%3E%3Cpath stroke='%236b7b73' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important; background-position: right 10px center !important; padding-right: 36px;
+    }
+    .err-msg { display: block; font-size: 12px; color: #c0392b; margin-top: 4px; min-height: 16px; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ===== BUTTON SUBMIT ===== */
+    .btn-submit {
+      width: 100%; margin-top: 0.5rem; padding: 13px 20px;
+      background: #1a5c38 !important; color: #fff; border: none; border-radius: 10px;
+      font-family: inherit; font-size: 15px; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .btn-submit:hover:not(:disabled) { background: #155030 !important; }
+    .btn-submit:active:not(:disabled) { transform: scale(0.98); }
+    .btn-submit:disabled { opacity: 0.75; cursor: not-allowed; }
+    .btn-label, .btn-loading { display: flex; align-items: center; gap: 8px; }
+    .dot { width: 7px; height: 7px; background: rgba(255,255,255,0.8); border-radius: 50%; animation: blink 1.2s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100%{opacity:0.2} 40%{opacity:1} }
+
+    /* ===== SUCCESS ===== */
+    .card-success { text-align: center; padding: 2.5rem 2rem; }
+    .success-icon { width: 80px; height: 80px; background: #eaf3de !important; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+    .success-icon .ti { font-size: 40px; color: #3b6d11; }
+    .card-success h2 { font-size: 20px; font-weight: 600; margin-bottom: 0.5rem; }
+    .card-success > p { font-size: 14px; color: #1a5c38; line-height: 1.7; }
+
+    /* ===== TICKET ===== */
+    .ticket { background: #f6faf7 !important; border: 1.5px dashed #1a5c38; border-radius: 12px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; text-align: left; }
+    .ticket-number { text-align: center; font-size: 24px; font-weight: 600; color: #1a5c38; letter-spacing: 1px; margin: 0.25rem 0 1rem; }
+    .ticket-label { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: #7a9a84; font-weight: 500; }
+    .ticket-divider { border: none; border-top: 1.5px dashed #b8d9c4; margin: 0.75rem 0; }
+    .ticket-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; font-size: 13px; padding: 3px 0; }
+    .ticket-row .t-key { color: #1a5c38; white-space: nowrap; flex-shrink: 0; }
+    .ticket-row .t-val { color: #1a1a1a; font-weight: 500; text-align: right; }
+
+    /* ===== BUTTON NEW ===== */
+    .btn-new {
+      background: transparent; border: 1.5px solid #1a5c38; color: #1a5c38;
+      border-radius: 8px; padding: 10px 24px; font-family: inherit; font-size: 14px;
+      font-weight: 500; cursor: pointer; display: inline-flex; align-items: center;
+      gap: 6px; margin-top: 0.25rem; transition: background 0.15s;
+    }
+    .btn-new:hover { background: #eaf3de; }
+
+    /* ===== FOOTER ===== */
+    .site-footer { text-align: center; padding: 1.25rem 1rem 2rem; font-size: 12px; color: #8aaa94; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+    [hidden] { display: none !important; }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 768px) {
+      body { background-attachment: scroll; }
+      .header-inner { flex-direction: row; align-items: center; justify-content: space-between; padding: 0; }
+      .logo-wrap { width: 50px; height: 50px; }
+      .logo-wrap img { width: 50px; height: 50px; }
+      .header-text h1 { font-size: 15px; }
+      .header-text p { font-size: 11px; }
+      .main-content { padding: 1rem 0.75rem; }
+      .card { padding: 1.25rem 1rem; border-radius: 12px; }
+      .row-2 { grid-template-columns: 1fr; gap: 0; }
+      .btn-submit { font-size: 15px; padding: 13px; }
+      .card-success { padding: 1.5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-wrap">
+        <img src="remove_kiri.jpg.png" alt="Logo Kiri" />
+      </div>
+      <div class="header-text">
+        <h1>Buku Tamu Digital</h1>
+        <p>Kantor Pelayanan Desa Situsari</p>
+      </div>
+      <div class="logo-wrap">
+        <img src="remove_kanan.jpg.png" alt="Logo Kanan" />
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== MAIN ===== -->
+  <main class="main-content">
+
+    <!-- FORM CARD -->
+    <div class="card" id="formCard">
+      <div class="card-header">
+        <i class="ti ti-clipboard-text"></i>
+        <div style="flex: 1;">
+          <h2>Formulir Kunjungan</h2>
+          <p>Kolom bertanda <span class="req">*</span> wajib diisi.</p>
+        </div>
+        <img src="bawah.jpg.png" alt="Logo Situsari" style="width: 90px; height: 45px; object-fit: contain; flex-shrink: 0;" />
+      </div>
+
+      <form id="tamuForm" novalidate>
+
+        <div class="field">
+          <label for="nama">Nama Lengkap <span class="req">*</span></label>
+          <input type="text" id="nama" placeholder="Masukkan nama lengkap Anda" autocomplete="name" />
+          <span class="err-msg" id="errNama"></span>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="nik">NIK <span class="req">*</span></label>
+            <input type="text" id="nik" placeholder="16 digit NIK" maxlength="16" inputmode="numeric" />
+            <span class="err-msg" id="errNik"></span>
+          </div>
+          <div class="field">
+            <label for="hp">No. HP / WhatsApp</label>
+            <input type="tel" id="hp" placeholder="08xx-xxxx-xxxx" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="alamat">Alamat Lengkap</label>
+          <input type="text" id="alamat" placeholder="Nama jalan / Dusun / Desa / Kecamatan" />
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="rt">RT</label>
+            <input type="text" id="rt" placeholder="Contoh: 001" inputmode="numeric" maxlength="5" />
+          </div>
+          <div class="field">
+            <label for="rw">RW</label>
+            <input type="text" id="rw" placeholder="Contoh: 002" inputmode="numeric" maxlength="5" />
+          </div>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="keperluan">Keperluan <span class="req">*</span></label>
+            <select id="keperluan">
+              <option value="">-- Pilih keperluan --</option>
+              <option>Pembuatan KTP</option>
+              <option>Pembuatan KK</option>
+              <option>Surat Keterangan</option>
+              <option>Izin Usaha</option>
+              <option>Akta Kelahiran</option>
+              <option>Akta Kematian</option>
+              <option>Pindah Domisili</option>
+              <option>Konsultasi / Lainnya</option>
+            </select>
+            <span class="err-msg" id="errKeperluan"></span>
+          </div>
+          <div class="field">
+            <label for="tujuan">Tujuan Layanan <span class="req">*</span></label>
+            <select id="tujuan">
+              <option value="">-- Pilih petugas --</option>
+              <option>Kepala Desa</option>
+              <option>Sekretaris Desa</option>
+              <option>Pelayanan Administrasi</option>
+              <option>Bendahara Desa</option>
+              <option>Bagian Umum</option>
+            </select>
+            <span class="err-msg" id="errTujuan"></span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="keterangan">Keterangan Tambahan</label>
+          <textarea id="keterangan" placeholder="Informasi tambahan (opsional)" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnSubmit">
+          <span class="btn-label"><i class="ti ti-send"></i> Daftar Kunjungan</span>
+          <span class="btn-loading" hidden>
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            Mengirim data…
+          </span>
+        </button>
+
+      </form>
+    </div>
+
+    <!-- SUCCESS CARD -->
+    <div class="card card-success" id="successCard" hidden>
+      <div class="success-icon"><i class="ti ti-circle-check"></i></div>
+      <h2>Pendaftaran Berhasil!</h2>
+      <p>Data kunjungan Anda telah tersimpan.<br>Silakan tunggu panggilan dari petugas.</p>
+      <div class="ticket" id="ticketBox"></div>
+      <button class="btn-new" id="btnNew"><i class="ti ti-plus"></i> Daftar Tamu Baru</button>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <i class="ti ti-lock"></i> Data Anda terlindungi &amp; hanya digunakan untuk keperluan pelayanan desa.
+  </footer>
+
+</div>
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6Lhf-g_ye9RnlkWoORbs2QHVL21ndH7Beg6Kkam3HPjSKeBvDWSfgoFA81f9RLmEC/exec";
+
+  const form        = document.getElementById("tamuForm");
+  const formCard    = document.getElementById("formCard");
+  const successCard = document.getElementById("successCard");
+  const btnSubmit   = document.getElementById("btnSubmit");
+  const btnNew      = document.getElementById("btnNew");
+  const ticketBox   = document.getElementById("ticketBox");
+
+  const fields = {
+    nama      : document.getElementById("nama"),
+    nik       : document.getElementById("nik"),
+    hp        : document.getElementById("hp"),
+    alamat    : document.getElementById("alamat"),
+    rt        : document.getElementById("rt"),
+    rw        : document.getElementById("rw"),
+    keperluan : document.getElementById("keperluan"),
+    tujuan    : document.getElementById("tujuan"),
+    keterangan: document.getElementById("keterangan"),
+  };
+
+  const errors = {
+    nama      : document.getElementById("errNama"),
+    nik       : document.getElementById("errNik"),
+    keperluan : document.getElementById("errKeperluan"),
+    tujuan    : document.getElementById("errTujuan"),
+  };
+
+  form.addEventListener("submit", handleSubmit);
+  btnNew.addEventListener("click", resetForm);
+  Object.entries(fields).forEach(([key, el]) => {
+    el.addEventListener("input", () => clearError(key));
+  });
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!validateForm()) return;
+    setLoading(true);
+    const payload = buildPayload();
+    try {
+      await fetch(SCRIPT_URL, {
+        method : "POST",
+        mode   : "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body   : JSON.stringify(payload),
+      });
+      tampilkanSukses(payload);
+    } catch (err) {
+      alert("Gagal mengirim data. Pastikan SCRIPT_URL sudah benar dan koneksi internet aktif.");
+      setLoading(false);
+    }
+  }
+
+  function validateForm() {
+    let valid = true;
+    if (!fields.nama.value.trim()) { showError("nama", "Nama lengkap wajib diisi."); valid = false; }
+    const nik = fields.nik.value.trim();
+    if (!nik) { showError("nik", "NIK wajib diisi."); valid = false; }
+    else if (!/^\d{16}$/.test(nik)) { showError("nik", "NIK harus 16 digit angka."); valid = false; }
+    if (!fields.keperluan.value) { showError("keperluan", "Pilih keperluan kunjungan."); valid = false; }
+    if (!fields.tujuan.value) { showError("tujuan", "Pilih tujuan layanan / petugas."); valid = false; }
+    return valid;
+  }
+
+  function showError(key, msg) {
+    if (errors[key]) errors[key].textContent = msg;
+    if (fields[key]) fields[key].classList.add("is-invalid");
+  }
+  function clearError(key) {
+    if (errors[key]) errors[key].textContent = "";
+    if (fields[key]) fields[key].classList.remove("is-invalid");
+  }
+  function clearAllErrors() { Object.keys(errors).forEach(clearError); }
+
+  function buildPayload() {
+    const now = new Date();
+    return {
+      nomor      : generateNomor(now),
+      waktu      : formatWaktu(now),
+      tanggal    : formatTanggal(now),
+      jam        : formatJam(now),
+      nama       : fields.nama.value.trim(),
+      nik        : fields.nik.value.trim(),
+      hp         : fields.hp.value.trim()         || "-",
+      alamat     : fields.alamat.value.trim()     || "-",
+      rt         : fields.rt.value.trim()         || "-",
+      rw         : fields.rw.value.trim()         || "-",
+      keperluan  : fields.keperluan.value,
+      tujuan     : fields.tujuan.value,
+      keterangan : fields.keterangan.value.trim() || "-",
+    };
+  }
+
+  function tampilkanSukses(data) {
+    ticketBox.innerHTML = `
+      <p class="ticket-label">Nomor Kunjungan</p>
+      <p class="ticket-number">${data.nomor}</p>
+      <hr class="ticket-divider" />
+      <div class="ticket-row"><span class="t-key">Waktu</span><span class="t-val">${data.waktu}</span></div>
+      <div class="ticket-row"><span class="t-key">Nama</span><span class="t-val">${escapeHtml(data.nama)}</span></div>
+      <div class="ticket-row"><span class="t-key">NIK</span><span class="t-val">${data.nik}</span></div>
+      <div class="ticket-row"><span class="t-key">Keperluan</span><span class="t-val">${data.keperluan}</span></div>
+      <div class="ticket-row"><span class="t-key">Petugas</span><span class="t-val">${data.tujuan}</span></div>
+    `;
+    formCard.hidden    = true;
+    successCard.hidden = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function resetForm() {
+    form.reset();
+    clearAllErrors();
+    setLoading(false);
+    successCard.hidden = true;
+    formCard.hidden    = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function setLoading(on) {
+    btnSubmit.disabled = on;
+    btnSubmit.querySelector(".btn-label").hidden  = on;
+    btnSubmit.querySelector(".btn-loading").hidden = !on;
+  }
+
+  function generateNomor(d) {
+    const dd  = String(d.getDate()).padStart(2,"0");
+    const mm  = String(d.getMonth()+1).padStart(2,"0");
+    const yy  = String(d.getFullYear()).slice(-2);
+    const hh  = String(d.getHours()).padStart(2,"0");
+    const min = String(d.getMinutes()).padStart(2,"0");
+    return `${dd}${mm}${yy}-${hh}${min}`;
+  }
+  function formatWaktu(d) {
+    return d.toLocaleString("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric", hour:"2-digit", minute:"2-digit" });
+  }
+  function formatTanggal(d) {
+    return d.toLocaleDateString("id-ID", { day:"numeric", month:"long", year:"numeric" });
+  }
+  function formatJam(d) {
+    return d.toLocaleTimeString("id-ID", { hour:"2-digit", minute:"2-digit" });
+  }
+  function escapeHtml(str) {
+    return str.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+</script>
+</body>
+</html>
